@@ -105,6 +105,9 @@ const App = () => {
         .catch(error => {
           displayMessage(`Error deleting ${personDelete.name}.`);
         });
+      personsService.getAll().then(initialPersons => {
+        setPersons(initialPersons);
+      });
     }
   };
 
