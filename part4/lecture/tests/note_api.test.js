@@ -65,7 +65,7 @@ describe('viewing a specific note', () => {
 });
 
 describe('addition of a new note', () => {
-  test('succeeds with avlid data', async () => {
+  test('succeeds with valid data', async () => {
     const newNote = {
       content: 'async/await simplifies making async calls',
       important: true,
