@@ -21,6 +21,7 @@ const blog2 = {
 const listWithOneBlog = [blog1];
 const listWithTwoBlogs = [blog1, blog1];
 const listWithDiffBlogs = [blog1, blog2];
+const listWithThreeBlogs = [blog1, blog1, blog2];
 
 describe('dummy', () => {
   test('dummy returns one', () => {
@@ -67,5 +68,19 @@ describe('favorite blog', () => {
   test('of a list with two blog is calculated correctly', () => {
     const result = listHelper.favoriteBlog(listWithDiffBlogs);
     expect(result).toEqual(blog2);
+  });
+});
+
+describe('most blogs', () => {
+  test('of a list with three blogs is calculated correctly', () => {
+    const result = listHelper.mostBlogs(listWithThreeBlogs);
+    expect(result).toEqual({ author: 'Edsger W. Dijkstra', blogs: 2 });
+  });
+});
+
+describe.skip('most likes', () => {
+  test('of a list with three blogs is calculated correctly', () => {
+    const result = listHelper.mostLikes(listWithThreeBlogs);
+    expect(result).toEqual({ author: 'Edsger W. Dijkstra', likes: 10 });
   });
 });

@@ -2,14 +2,13 @@ import React, { useState, useEffect } from 'react';
 import Note from './components/Note';
 import Notification from './components/Notification';
 import Footer from './components/Footer';
+import Forms from './components/Forms';
 import noteService from './services/notes';
 
 const App = () => {
   const [notes, setNotes] = useState([]);
-  const [newNote, setNewNote] = useState('');
   const [showAll, setShowAll] = useState(true);
   const [errorMessage, setErrorMessage] = useState(null);
-
   const notesToShow = showAll ? notes : notes.filter(note => note.important);
 
   useEffect(() => {
@@ -38,28 +37,16 @@ const App = () => {
       });
   };
 
-  const addNote = event => {
-    event.preventDefault();
-    const noteObject = {
-      content: newNote,
-      date: new Date().toISOString(),
-      important: Math.random() < 0.5,
-    };
-
-    noteService.create(noteObject).then(returnedNote => {
-      setNotes(notes.concat(returnedNote));
-      setNewNote('');
-    });
-  };
-
-  const handleNoteChange = event => {
-    setNewNote(event.target.value);
-  };
-
   return (
     <div>
       <h1>Notes</h1>
+      <Forms
+        notes={notes}
+        setNotes={setNotes}
+        setErrorMessage={setErrorMessage}
+      />
       <Notification message={errorMessage} />
+      <h2>Notes</h2>
       <div>
         <button onClick={() => setShowAll(!showAll)}>
           show {showAll ? 'important' : 'all'}
@@ -74,10 +61,6 @@ const App = () => {
           />
         ))}
       </ul>
-      <form onSubmit={addNote}>
-        <input value={newNote} onChange={handleNoteChange} />
-        <button type="submit">Save</button>
-      </form>
       <Footer />
     </div>
   );

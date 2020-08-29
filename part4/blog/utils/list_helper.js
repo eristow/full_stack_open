@@ -1,3 +1,4 @@
+var _ = require('lodash');
 // eslint-disable-next-line no-unused-vars
 const dummy = blogs => {
   return 1;
@@ -18,8 +19,25 @@ const favoriteBlog = blogs => {
   return blogs.length === 0 ? {} : blogs.reduce(reducer, 0);
 };
 
+// return: author who has largest amount of blogs
+// { author: "author_name", blogs: num_blogs }
 const mostBlogs = blogs => {
-  return blogs;
+  console.log(blogs);
+  const authors = ;
+
+  return {
+    author: '',
+    blogs: -1,
+  };
+};
+
+// return: author whose blog posts have largest amount of likes
+// { author: "author_name", likes: total_likes }
+const mostLikes = blogs => {
+  return {
+    author: '',
+    likes: -1,
+  };
 };
 
 module.exports = {
@@ -27,4 +45,5 @@ module.exports = {
   totalLikes,
   favoriteBlog,
   mostBlogs,
+  mostLikes,
 };
