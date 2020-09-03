@@ -12,7 +12,8 @@
     "deploy": "git push heroku master",
     "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && npm run deploy",
     "lint": "eslint .",
-    "logs:prod": "heroku logs --tail"
+    "logs:prod": "heroku logs --tail",
+    "start:test": "cross-env NODE_ENV=test node index.js"
   },
   "author": "Evan Ristow",
   "license": "MIT",

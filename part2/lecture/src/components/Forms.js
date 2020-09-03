@@ -68,7 +68,7 @@ const Forms = ({ notes, setNotes, setErrorMessage }) => {
         loginForm()
       ) : (
         <div>
-          <p>{user.name} logged-in</p>
+          <p>{user.name} logged in</p>
           {noteForm()}
         </div>
       )}
