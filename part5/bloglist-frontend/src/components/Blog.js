@@ -28,24 +28,24 @@ const Blog = ({ blog, like, showDelete, deleteBlog }) => {
   return (
     <div style={blogStyle}>
       <div className="blogContent">
-        {blog.title} {blog.author}
-        <button type="button" onClick={toggleShowDetails}>
+        <span id="blog-title-author">{blog.title} {blog.author}</span>
+        <button type="button" id="show-details-button" onClick={toggleShowDetails}>
           {showDetails ? 'hide' : 'show'}
         </button>
       </div>
       {showDetails ? (
         <div className="blogDetails">
-          {blog.url}
+          <span id="blog-url">{blog.url}</span>
           <br />
-          {`likes ${blog.likes}`}
-          <button type="button" onClick={handleLike}>
+          <span id="blog-likes">{`likes ${blog.likes}`}</span>
+          <button type="button" id="like-button" onClick={handleLike}>
             like
           </button>
           <br />
           {blog.user.name}
           <br />
           {showDelete ? (
-            <button type="button" onClick={handleDelete}>
+            <button type="button" id="delete-button" onClick={handleDelete}>
               remove
             </button>
           ) : (
