@@ -5,12 +5,13 @@ import { createNote } from '../reducers/noteReducer';
 const NewNote = props => {
   const dispatch = useDispatch();
 
-  const addNote = e => {
+  const addNote = async e => {
     e.preventDefault();
     const content = e.target.note.value;
     e.target.note.value = '';
     dispatch(createNote(content));
   };
+
   return (
     <form onSubmit={addNote}>
       <input name="note" />

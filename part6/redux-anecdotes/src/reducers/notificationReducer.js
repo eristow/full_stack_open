@@ -1,24 +1,27 @@
 const notificationReducer = (state = '', action) => {
   switch (action.type) {
-    case 'ENABLE_NOTIFICATION':
+    case 'SET_NOTIFICATION':
       return action.notification;
-    case 'DISABLE_NOTIFICATION':
+    case 'CLEAR_NOTIFICATION':
       return '';
     default:
       return state;
   }
 };
 
-export const enableNotification = notification => {
-  return {
-    type: 'ENABLE_NOTIFICATION',
-    notification,
+export const setNotification = (notification, time) => {
+  return async dispatch => {
+    dispatch({
+      type: 'SET_NOTIFICATION',
+      notification,
+    });
+    window.setTimeout(() => dispatch(clearNotification()), time * 1000);
   };
 };
 
-export const disableNotification = notification => {
+export const clearNotification = () => {
   return {
-    type: 'DISABLE_NOTIFICATION',
+    type: 'CLEAR_NOTIFICATION',
   };
 };
 
