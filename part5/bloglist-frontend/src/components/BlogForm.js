@@ -1,5 +1,24 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import styled from 'styled-components';
+
+const Container = styled.div`
+  margin: 0px 10px 10px 10px;
+`;
+const Button = styled.button`
+  margin-bottom: 5px;
+  border-radius: 3px;
+  border: 1px solid black;
+  padding: 5px;
+  background: lightgray;
+`;
+const Input = styled.input`
+  margin: 0px 5px;
+  border-radius: 3px;
+  border: 1px solid black;
+  padding: 3px;
+`;
+const Label = styled.label``;
 
 const BlogForm = ({ addBlog }) => {
   const [newTitle, setNewTitle] = useState('');
@@ -34,23 +53,61 @@ const BlogForm = ({ addBlog }) => {
   };
 
   return (
-    <div>
+    <Container>
       <form onSubmit={handleSubmit}>
-        <label style={{ display: 'block' }}>
-          Title:
-          <input id="title" value={newTitle} onChange={handleTitleChange} />
-        </label>
-        <label style={{ display: 'block' }}>
-          Author:
-          <input id="author" value={newAuthor} onChange={handleAuthorChange} />
-        </label>
-        <label style={{ display: 'block' }}>
-          Url:
-          <input id="url" value={newUrl} onChange={handleUrlChange} />
-        </label>
-        <button type="submit" id="blog-submit">Save</button>
+        <table style={{ width: '100px' }}>
+          <tbody>
+            <tr>
+              <td>
+                <Label>Table:</Label>
+              </td>
+              <td>
+                <Input
+                  id="title"
+                  value={newTitle}
+                  onChange={handleTitleChange}
+                />
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <Label>Author:</Label>
+              </td>
+              <td>
+                <Input
+                  id="author"
+                  value={newAuthor}
+                  onChange={handleAuthorChange}
+                />
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <Label>Author:</Label>
+              </td>
+              <td>
+                <Input
+                  id="author"
+                  value={newAuthor}
+                  onChange={handleAuthorChange}
+                />
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <Label>Url:</Label>
+              </td>
+              <td>
+                <Input id="url" value={newUrl} onChange={handleUrlChange} />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <Button type="submit" id="blog-submit">
+          Save
+        </Button>
       </form>
-    </div>
+    </Container>
   );
 };
 

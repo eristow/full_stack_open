@@ -1,145 +1,74 @@
-import React, { useState, useEffect, useRef } from 'react';
-import Blog from './components/Blog';
-import LoginForm from './components/LoginForm';
-import BlogForm from './components/BlogForm';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Switch, Route } from 'react-router-dom';
+import styled from 'styled-components';
+import { setNotification } from './reducers/notificationReducer';
+import { likeBlog } from './reducers/blogReducer';
+import { setUser } from './reducers/userReducer';
 import Notification from './components/Notification';
-import Toggleable from './components/Toggleable';
-import blogService from './services/blogs';
-import loginService from './services/login';
+import Users from './components/Users';
+import LoginForm from './components/LoginForm';
+import User from './components/User';
+import BlogDetails from './components/BlogDetails';
+import Blogs from './components/Blogs';
+import Nav from './components/Nav';
+
+const Container = styled.div`
+  max-width: calc(800px);
+  margin: 0px auto;
+  display: flex;
+  min-height: 100%;
+  padding: 0px 16px;
+  flex-direction: column;
+`;
+const Title = styled.h1`
+  margin-bottom: 0px;
+`;
 
 const App = () => {
-  const [blogs, setBlogs] = useState([]);
-  const [user, setUser] = useState(null);
-  const [errorMessage, setErrorMessage] = useState(null);
-  const blogFormRef = useRef();
-
-  useEffect(() => {
-    blogService.getAll().then(blogs => setBlogs(blogs));
-  }, []);
+  const dispatch = useDispatch();
+  const user = useSelector(state => state.user);
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedUser');
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON);
-      setUser(user);
-      blogService.setToken(user.token);
+      dispatch(setUser(user));
     }
-  }, []);
-
-  const handleLogout = () => {
-    window.localStorage.removeItem('loggedUser');
-    setUser(null);
-    setErrorMessage('Successfully logged out.');
-    setTimeout(() => {
-      setErrorMessage(null);
-    }, 5000);
-  };
-
-  const addBlog = async blog => {
-    try {
-      blogFormRef.current.toggleVisibility();
-      const returnedBlog = await blogService.create(blog);
-      setBlogs(blogs.concat(returnedBlog));
-      setErrorMessage(
-        `A new blog "${blog.title}" by ${blog.author} has been added.`,
-      );
-      setTimeout(() => {
-        setErrorMessage(null);
-      }, 5000);
-    } catch (exception) {
-      console.log('error:', exception);
-      setErrorMessage('Error creating new blog');
-      setTimeout(() => {
-        setErrorMessage(null);
-      }, 5000);
-    }
-  };
-
-  const login = async potentialUser => {
-    try {
-      const user = await loginService.login(potentialUser);
-      window.localStorage.setItem('loggedUser', JSON.stringify(user));
-      blogService.setToken(user.token);
-      setErrorMessage('Successfully logged in.');
-      setTimeout(() => {
-        setErrorMessage(null);
-      }, 5000);
-      setUser(user);
-    } catch (exception) {
-      console.log('error:', exception);
-      setErrorMessage('Wrong credentials');
-      setTimeout(() => {
-        setErrorMessage(null);
-      }, 5000);
-    }
-  };
+  }, [dispatch]);
 
   const like = async newBlog => {
     try {
-      const updatedBlog = await blogService.update(newBlog.id, newBlog);
-      setBlogs(
-        blogs.map(blog => (blog.id !== newBlog.id ? blog : updatedBlog)),
-      );
+      dispatch(likeBlog(newBlog));
     } catch (exception) {
       console.log('error:', exception);
-      setErrorMessage('There was a problem liking this blog');
-      setTimeout(() => {
-        setErrorMessage(null);
-      }, 5000);
-    }
-  };
-
-  const deleteBlog = async toDeleteBlog => {
-    try {
-      await blogService.remove(toDeleteBlog.id);
-      setBlogs(blogs.filter(blog => blog.id !== toDeleteBlog.id));
-    } catch (exception) {
-      console.log('error:', exception);
-      setErrorMessage('There was a problem deleting this blog');
-      setTimeout(() => {
-        setErrorMessage(null);
-      }, 5000);
+      dispatch(setNotification('There was a problem liking this blog', 5));
     }
   };
 
   return (
-    <div>
-      <h1>Blogs</h1>
-      <Notification message={errorMessage} />
-      {user === null ? (
-        <LoginForm login={login} />
-      ) : (
-        <div>
-          <p>
-            {`${user.name} logged in`}
-            <button
-              type="button"
-              id="logout-button"
-              onClick={() => handleLogout()}
-            >
-              Log Out
-            </button>
-          </p>
-          <Toggleable buttonLabel="New Blog" ref={blogFormRef}>
-            <h2>Create New Blog</h2>
-            <BlogForm addBlog={addBlog} />
-          </Toggleable>
-          <div id="blogs-list">
-            {blogs
-              .sort((a, b) => b.likes - a.likes)
-              .map(blog => (
-                <Blog
-                  key={blog.id}
-                  blog={blog}
-                  like={like}
-                  showDelete={user.id === blog.user.id}
-                  deleteBlog={deleteBlog}
-                />
-              ))}
-          </div>
-        </div>
+    <Container>
+      <Nav user={user} />
+      <Title>Blogs</Title>
+      <Notification />
+      {!user && <LoginForm />}
+      {user && (
+        <Switch>
+          <Route exact path="/">
+            <Blogs />
+          </Route>
+          <Route path="/users/:id">
+            <User />
+          </Route>
+          <Route path="/users">
+            <Users />
+          </Route>
+          <Route path="/blogs/:id">
+            <BlogDetails like={like} userId={user.id} />
+          </Route>
+        </Switch>
       )}
-    </div>
+    </Container>
   );
 };
 
